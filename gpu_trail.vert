@@ -44,6 +44,11 @@ void main(){
     // magic method
     vec3 handle_neg = (p3 - p1).xyz;
     vec3 handle_pos = (p2 - p4).xyz;
+    
+    if (index_here == 0){
+        handle_pos = -handle_neg;
+    }
+    
     vec3 b1 = p2.xyz;
     vec3 b2 = p2.xyz + handle_neg * curviness;
     vec3 b3 = p3.xyz + handle_pos * curviness;

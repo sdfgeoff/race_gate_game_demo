@@ -49,7 +49,7 @@ class Game:
         for e_id, enemy in enumerate(self.enemies):
             enemy.set_position([
                 (e_id + 1) * 30.0,
-                (e_id + 1) * 30.0,
+                1200.0, #(e_id + 1) * 30.0,
                 1250,
             ])
             enemy.set_color(e_id / len(self.enemies))
@@ -63,8 +63,11 @@ class Game:
         
         pan = (0.5 - mouse_pos[0]) * 20.0
         tilt = (0.5 - mouse_pos[1]) * 20.0
-        roll = get_key("EKEY") - get_key("QKEY")
+        roll = (get_key("EKEY") - get_key("QKEY")) * 0.2
         thrust = 0.5
+        
+        
+        now = bge.logic.getFrameTime()
         
         if abs(pan) < 10/bge.render.getWindowWidth():
             pan = 0.0
@@ -76,8 +79,15 @@ class Game:
         self.player.update()
         
         for e_id, enemy in enumerate(self.enemies):
-            pan = math.sin(time.time() + e_id) * -0.05
-            tilt = math.cos(time.time() + e_id) * -0.02
+            pan = math.sin(now + e_id * 0.01) * -0.05
+            tilt = math.cos(now + e_id * 0.01) * -0.02
+            
+            
+            if now < 10.0 and now > 9.0:
+                tilt += e_id * 0.1
+                pan += e_id * 0.1
+                
+
             enemy.set_control(0.48, mathutils.Vector([pan,tilt,0]))
             enemy.update()
 
@@ -89,7 +99,7 @@ class Game:
         
         trail = self.trail_manager.attach_trail(
             new_vehicle.get_trail_attach_point(),
-            10.0,
+            5.0,
             10.0,
             (1.0, 1.0, 0.0, 0.0)
         )
